@@ -9,6 +9,9 @@ class Robot:
         # get local variable for each motorhat
         self.left_motor = self._mh.getMotor(1)
         self.right_motor = self._mh.getMotor(2)
+        # set motor speed corrections
+        self.left_motor_speed_corr = 0.90
+        self.right_motor_speed_corr = 1
         # set up the distance sensors
         self.left_distance_sensor = DistanceSensor(echo=5, trigger=6, queue_len=2)
         self.right_distance_sensor = DistanceSensor(echo=17, trigger=27, queue_len=2)
@@ -28,12 +31,12 @@ class Robot:
 
     def set_left(self, speed):
         mode, output_speed = self.convert_speed(speed)
-        self.left_motor.setSpeed(output_speed)
+        self.left_motor.setSpeed(int(float(output_speed) * self.left_motor_speed_corr))
         self.left_motor.run(mode)
 
     def set_right(self, speed):
         mode, output_speed = self.convert_speed(speed)
-        self.right_motor.setSpeed(output_speed)
+        self.right_motor.setSpeed(int(float(output_speed) * self.right_motor_speed_corr))
         self.right_motor.run(mode)
 
     def stop_motors(self):
