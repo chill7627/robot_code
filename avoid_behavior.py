@@ -1,11 +1,20 @@
 from robot import Robot
 from time import sleep
+from led_rainbow import show_rainbow
 
 class ObstacleAvoidingBehavior:
     """Simple obstacle avoiding"""
     def __init__(self, the_robot):
         self.robot = the_robot
         self.speed = 60
+        # calculations for the LEDs
+        self.led_half = int(self.robot.leds.count/2)
+
+    def distance_to_led_bar(self, distance):
+        # Invert so closer means more leds
+        inverted = max(0, 1.0-distance)
+        led_bar = int(round(inverted*self.led_half)) + 1
+        return led_bar
 
     def get_speeds(self, nearest_distance):
         if nearest_distance >= 1.0:
@@ -38,7 +47,7 @@ class ObstacleAvoidingBehavior:
             # get the sensor readings in meters
             left_distance = self.robot.left_distance_sensor.distance
             right_distance = self.robot.right_distance_sensor.distance
-            # display distances
+            # display distances on terminal and leds
             self.display_state(left_distance, right_distance)
             # get speeds for motors from nearest distance
             nearest_speed, furthest_speed, delay = self.get_speeds(min(left_distance, right_distance))
@@ -56,6 +65,18 @@ class ObstacleAvoidingBehavior:
             sleep(delay*0.001)
 
     def display_state(self, left_distance, right_distance):
+        # clear leds first
+        self.robot.leds.clear()
+        # left side
+        led_bar = self.distance_to_led_bar(left_distance)
+        show_rainbow(self.robot.leds, range(led_bar))
+        # right side
+        led_bar = self.distance_to_led_bar(right_distance)
+        # bit trickier, must go from below the leds count up to the leds count
+        start = (self.robot.leds.count-1)-led_bar
+        show_rainbow(self.robot.leds, range(self.robot.leds.count-1, start, -1))
+        # Now show the leds
+        self.robot.leds.show()
         print("Left: {l:.2f}, Right: {r:.2f}".format(l=left_distance, r=right_distance))
 
 bot = Robot()

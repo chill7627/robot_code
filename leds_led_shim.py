@@ -9,7 +9,7 @@ class Leds:
         ledshim.set_pixel(led_number, *color)
 
     def set_range(self, led_range, color):
-        ledshim.set_multiple_pixels(led_range, *color)
+        ledshim.set_multiple_pixels(led_range, color)
 
     def set_all(self, color):
         ledshim.set_all(*color)
