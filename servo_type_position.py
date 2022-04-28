@@ -13,7 +13,7 @@ pwm.setPWMFreq(pwm_frequency)
 servo_mid_point_ms = 1.5
 
 # What a deflection of 90 degrees is in pulse length in milliseconds
-deflect_90_in_ms = 0.5
+deflect_90_in_ms = 0.95
 
 # length of pulse in chip depends on the frequency pulse (number of steps per cycle)
 # 4,096 steps (12 bits) higher frequency needs more steps in the pulse to maintain pulse length, because
