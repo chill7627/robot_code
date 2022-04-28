@@ -2,6 +2,7 @@ from Raspi_MotorHAT import Raspi_MotorHAT as rmh
 from gpiozero import DistanceSensor
 import atexit
 import leds_led_shim
+from servos import Servos
 
 class Robot:
     def __init__(self, motorhat_addr=0x60):
@@ -18,6 +19,8 @@ class Robot:
         self.right_distance_sensor = DistanceSensor(echo=17, trigger=27, queue_len=2)
         # set up leds
         self.leds = leds_led_shim.Leds()
+        # set up servo motors for pan and tilt
+        self.servos = Servos(addr=motorhat_addr)
         # ensure the motors and leds get stopped when the code exits
         atexit.register(self.stop_all)
 
@@ -42,9 +45,18 @@ class Robot:
         self.right_motor.setSpeed(int(float(output_speed) * self.right_motor_speed_corr))
         self.right_motor.run(mode)
 
+    def set_pan(self, angle):
+        self.servos.set_servo_angle(1, angle)
+
+    def set_tilt(self, angle):
+        self.servos.set_servo_angle(0, angle)
+
     def stop_all(self):
+        # stop wheel motors
         self.left_motor.run(rmh.RELEASE)
         self.right_motor.run(rmh.RELEASE)
         # clear leds
         self.leds.clear()
         self.leds.show()
+        # stop servos
+        self.servos.stop_all()
