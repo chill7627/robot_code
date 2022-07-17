@@ -27,7 +27,7 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
 
     primary_to_secondary_ratio = secondary_distance / primary_distance
     secondary_speed = speed * primary_to_secondary_ratio
-    logger.debug("Targers-primary: %d, secondary: %d, ratio: %.2f" % (primary_distance, secondary_distance, primary_to_secondary_ratio))
+    logger.debug("Targers - primary: %d, secondary: %d, ratio: %.2f" % (primary_distance, secondary_distance, primary_to_secondary_ratio))
     # reset encoders for next section of track
     primary_encoder.reset()
     secondary_encoder.reset()
@@ -36,7 +36,7 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
 
     # Ensure that the encoder knows which way it is going
     primary_encoder.set_direction(math.copysign(1, speed))
-    secondary_encoder.set_direction(math.copysign(1, speed))
+    secondary_encoder.set_direction(math.copysign(1, secondary_speed))
 
     #start the motors and start the loop
     set_primary(speed)
@@ -65,13 +65,6 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
             set_primary(0)
             secondary_speed = 0
 
-logging.basicConfig(level=logging.INFO)
-bot = Robot()
-distance_to_drive = 300 # in mm - this is a meter
-distance_in_ticks = EncoderCounter.mm_to_ticks(distance_to_drive)
-radius = bot.wheel_diameter_mm + 100 # in mm
-radius_in_ticks = EncoderCounter.mm_to_ticks(radius)
-
 def drive_arc(bot, turn_in_degrees, radius, speed=80):
     """Turn is based on change in heading."""
     # get the bot width in ticks
@@ -93,6 +86,15 @@ def drive_arc(bot, turn_in_degrees, radius, speed=80):
     logger.info(f"Arc left distance {left_distance}, right_distance {right_distance}")
 
     drive_distances(bot, left_distance, right_distance, speed=speed)
+
+logging.basicConfig(level=logging.DEBUG)
+bot = Robot()
+distance_to_drive = 300 # in mm - this is a meter
+distance_in_ticks = EncoderCounter.mm_to_ticks(distance_to_drive)
+radius = bot.wheel_diameter_mm + 100 # in mm
+radius_in_ticks = EncoderCounter.mm_to_ticks(radius)
+
+
 
 for n in range(4):
     drive_distances(bot, distance_in_ticks, distance_in_ticks) # straight line
