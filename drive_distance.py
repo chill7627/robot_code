@@ -34,6 +34,6 @@ def drive_distance(bot, distance, speed=80):
 
 logging.basicConfig(level=logging.INFO)
 bot = Robot()
-distance_to_drive = 1000 # in mm - this is a meter
+distance_to_drive = 300 # in mm - this is a meter
 distance_in_ticks = EncoderCounter.mm_to_ticks(distance_to_drive)
 drive_distance(bot, distance_in_ticks)
