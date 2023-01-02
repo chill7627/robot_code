@@ -14,7 +14,7 @@ class ColorTrackingBehavior:
         # range of 25 - 80 for hue is 50 to 160 on hue wheel.
         # saturation is 70 to 255 any lower and start to detect washed out or gray colors.
         # light is 25 very dark to 255 fully lit
-        self.low_range = (25, 70, 25)
+        self.low_range = (20, 70, 25)
         self.high_range = (80, 255, 255)
         # correct radius sets the size we intend to keep the object at and behaves as a distance setting
         self.correct_radius = 120
@@ -75,14 +75,14 @@ class ColorTrackingBehavior:
         # runs the behavior
         # set servos on pan and tilt camera to 0 position (forward)
         self.robot.set_pan(0)
-        self.robot.set_tile(0)
+        self.robot.set_tilt(0)
         # setup camera stream
         camera = camera_stream.setup_camera()
         # set up pid controllers
         # pid for speed based on radius
-        speed_pid = PIController(proportional_constant=0.8, integral_constant=0.1, windup_limit=100)
+        speed_pid = PIController(proportional_constant=0.5, integral_constant=0.1, windup_limit=100)
         # pid for direction based on distance
-        direction_pid = PIController(proportional_constant=0.25, integral_constant=0.05, windup_limit=400)
+        direction_pid = PIController(proportional_constant=0.3, integral_constant=0.05, windup_limit=400)
 
         # sleep to allow servos and camera to warm up
         time.sleep(0.1)

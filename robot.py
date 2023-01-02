@@ -59,6 +59,10 @@ class Robot:
     def set_tilt(self, angle):
         self.servos.set_servo_angle(0, angle)
 
+    def stop_motors(self):
+        self.left_motor.run(rmh.RELEASE)
+        self.right_motor.run(rmh.RELEASE)
+
     def stop_all(self):
         # stop wheel motors
         self.left_motor.run(rmh.RELEASE)

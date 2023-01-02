@@ -15,10 +15,11 @@ class PIController:
         return self.proportional_constant * error
 
     def handle_integral(self, error):
-        if self.windup_limit is None or (abs(self.integral_sum) < self.windup_limit) \
-            or ((error > 0) != (self.integral_sum > 0)):
+        if self.windup_limit is None or \
+                (abs(self.integral_sum) < self.windup_limit) or \
+                ((error > 0) != (self.integral_sum > 0)):
             self.integral_sum += error
-            return self.integral_constant * self.integral_sum
+        return self.integral_constant * self.integral_sum
 
     def get_value(self, error):
         p = self.handle_proportional(error)
