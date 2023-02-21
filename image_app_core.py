@@ -31,7 +31,7 @@ def control():
 def start_server_process(template_name):
     global display_template
     display_template = template_name
-    server = Process(target=app.run, kwargs={"host":"0.0.0.0","port":5001})
+    server = Process(target=app.run, kwargs={"host":"0.0.0.0","port":2000})
     server.start()
     return server
 
