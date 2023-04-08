@@ -15,7 +15,7 @@ class LineFollowingBehavior:
         self.diff_threshold = 10
         self.center = 160
         self.running = False
-        self.speed = 40
+        self.speed = 45
         self.crosshair_color = [0, 255, 0]
         self.line_middle_color = [128, 128, 255]
         self.graph_color = [255, 128, 128]
@@ -44,7 +44,7 @@ class LineFollowingBehavior:
         camera = camera_stream.setup_camera()
 
         # set up pid
-        direction_pid = PIController(proportional_constant=0.2, integral_constant=0.01, 
+        direction_pid = PIController(proportional_constant=0.25, integral_constant=0.01, 
                                      windup_limit=400)
         time.sleep(1)
         # stop the servos after initial positioning so they don't drain power.
@@ -76,7 +76,7 @@ class LineFollowingBehavior:
                 else:
                     with open(self.log_file, 'w+') as f:
                         f.write("direction_error,direction_value,new_time\n")
-                        f.write(f"{direction_error},{direction_value:2f},{new_time}\n")
+                        f.write(f"{direction_error},{direction_value:2f},{new_time}\n") 
                 self.robot.set_left(self.speed - direction_value)
                 self.robot.set_right(self.speed + direction_value)
 
@@ -147,7 +147,7 @@ class LineFollowingBehavior:
 
 # now intialize robot and run class behavior
 print('Setting up')
-behavior = LineFollowingBehavior(Robot())
+behavior = LineFollowingBehavior(Robot(), log_file='pid_log.csv')
 process = start_server_process('color_track_behavior.html')
 try:
     behavior.run()
