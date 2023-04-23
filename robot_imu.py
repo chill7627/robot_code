@@ -5,10 +5,11 @@ from vpython import vector
 
 
 class RobotIMU:
-    def __init__(self):
+    def __init__(self, gyro_offsets=None):
         self._i2c = I2C()
         self._accl_gyro = LSM6DSOX(self._i2c)
         self._mag = LIS3MDL(self._i2c)
+        self.gyro_offsets = gyro_offsets or vector(0, 0, 0)
 
     def read_magnetometer(self):
         """returns mag_x, mag_y, mag_z"""
@@ -23,4 +24,4 @@ class RobotIMU:
     def read_gyroscope(self):
         """returns gyro_x, gyro_y, gyro_z"""
         x, y, z = self._accl_gyro.gyro
-        return vector(x, y, z)
+        return vector(x, y, z) - self.gyro_offsets
