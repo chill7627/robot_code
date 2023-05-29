@@ -1,7 +1,33 @@
 from adafruit_lis3mdl import LIS3MDL
 from adafruit_lsm6ds.lsm6dsox import LSM6DSOX
 from board import I2C
-from vpython import vector
+from vpython import vector, degrees, atan2
+
+
+class ComplementaryFilter:
+    # accelerometer values will be used to help filter out the noise from the gyroscope
+    def __init__(self, filter_left=0.9):
+        # filter left is the gyro input
+        self.filter_left = filter_left
+        # filter right is the accelerometer input
+        self.filter_right = 1.0 - filter_left
+
+    def filter(self, left, right):
+        return self.filter_left * left + self.filter_right * right
+    
+
+class ImuFusion:
+    def __init__(self, imu, filter_value=0.95):
+        self.imu = imu
+        self.filter = ComplementaryFilter(filter_value).filter
+        self.pitch = 0
+        self.roll = 0
+
+    def update(self, dt):
+        accel_pitch, accel_roll = self.imu.read_accelerometer_pitch_and_roll()
+        gyro = self.imu.read_gyroscope()
+        self.pitch = self.filter(self.pitch + gyro.y * dt, accel_pitch)
+        self.roll = self.filter(self.roll + gyro.x * dt, accel_roll)
 
 
 class RobotIMU:
@@ -20,6 +46,12 @@ class RobotIMU:
         """returns accl_x, accl_y, accl_z"""
         x, y, z = self._accl_gyro.acceleration
         return vector(x, y, z)
+    
+    def read_accelerometer_pitch_and_roll(self):
+        accel = self.read_accelerometer()
+        pitch = degrees(-atan2(accel.x, accel.z))
+        roll = degrees(-atan2(accel.y, accel.z))
+        return pitch, roll
 
     def read_gyroscope(self):
         """returns gyro_x, gyro_y, gyro_z"""
