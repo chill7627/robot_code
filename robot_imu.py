@@ -31,18 +31,19 @@ class ImuFusion:
 
 
 class RobotIMU:
-    def __init__(self, gyro_offsets=None):
+    def __init__(self, gyro_offsets=None, mag_offsets=None):
         self._i2c = I2C()
         self._accl_gyro = LSM6DSOX(self._i2c)
         self._mag = LIS3MDL(self._i2c)
         self.gyro_offsets = gyro_offsets or vector(0, 0, 0)
+        self.mag_offsets = mag_offsets or vector(0, 0, 0)
 
     def read_magnetometer(self):
         """returns mag_x, mag_y, mag_z"""
         x, y, z = self._mag.magnetic
-        return vector(x, y, z)
+        return vector(x, y, z) - self.mag_offsets
         
-    def read_acclerometer(self):
+    def read_accelerometer(self):
         """returns accl_x, accl_y, accl_z"""
         x, y, z = self._accl_gyro.acceleration
         return vector(x, y, z)

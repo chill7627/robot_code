@@ -1,0 +1,31 @@
+vpython # see cryptography note below
+Raspi_MotorHAT # see blinka note below
+picamera
+sudo pip3 install picamera[array]
+
+flask
+numpy
+gpiozero (pip install RPi.GPIO gpiozero) see blinka note
+ledshim
+matplotlib
+adafruit_lis3mdl
+adafruit_lsm6ds
+
+
+install git
+# install rust and use pip install cryptography --no-binary cryptography
+# for motorhat need adafruit blinka install and motorkit install
+# also board package is a part of blinka install
+# also the RPi.GPIO gpiozero is a part of blinka install
+echo 'alias vpython="VPYTHON_PORT=9020 VPYTHON_NOBROWSER=true python3"' >>~/.bashrc
+
+# installing opencv
+# prerequisites
+sudo apt install -y libavcodec58 libilmbase23 libgtk-3-0 libatk1.0-0 libpango-1.0-0 libavutil56 libavformat58 libjasper1 libopenexr23 libswscale5 libpangocairo-1.0-0 libtiff5 libcairo2 libwebp6 libgdk-pixbuf2.0-0 libcairo-gobject2 libhdf5-dev
+# opencv
+sudo pip3 install "opencv_python_headless<4.5" "opencv_contrib_python_headless<4.5"
+# set env vars
+pi@myrobot:~ $ echo export LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 >>.bashrc pi@myrobot:~ $ source .bashrc
+
+# install matplotlib
+sudo apt install libatlas3-base libgfortran5
