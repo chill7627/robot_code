@@ -1,7 +1,7 @@
 from adafruit_lis3mdl import LIS3MDL
 from adafruit_lsm6ds.lsm6dsox import LSM6DSOX
 from board import I2C
-from vpython import vector, degrees, atan2
+from vpython import vector, degrees, atan2, radians
 
 
 class ComplementaryFilter:
@@ -22,12 +22,20 @@ class ImuFusion:
         self.filter = ComplementaryFilter(filter_value).filter
         self.pitch = 0
         self.roll = 0
+        self.yaw = 0
 
     def update(self, dt):
         accel_pitch, accel_roll = self.imu.read_accelerometer_pitch_and_roll()
         gyro = self.imu.read_gyroscope()
+        mag = self.imu.read_magnetometer()
         self.pitch = self.filter(self.pitch + gyro.y * dt, accel_pitch)
         self.roll = self.filter(self.roll + gyro.x * dt, accel_roll)
+        # rotate mag vector using pitch and tilt the level to xy components
+        mag = mag.rotate(radians(self.pitch), vector(0, 1, 0))
+        mag = mag.rotate(radians(self.roll), vector(1, 0, 0))
+        mag_yaw = -degrees(atan2(mag.y, mag.x))
+        # use complimentary filter with gyroscope
+        self.yaw = self.filter(self.yaw + gyro.z*dt, mag_yaw)
 
 
 class RobotIMU:
