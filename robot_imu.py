@@ -13,7 +13,26 @@ class ComplementaryFilter:
         self.filter_right = 1.0 - filter_left
 
     def filter(self, left, right):
-        return self.filter_left * left + self.filter_right * right
+        left = self.format_angle(left)
+        right = self.format_angle(right)
+
+        if left - right > 350:
+            right += 360
+        elif right - left > 350:
+            left += 360
+
+        filtered = self.filter_left * left + self.filter_right * right
+        return self.format_angle(filtered)
+    
+    @staticmethod
+    def format_angle(angle):
+        if angle < -180:
+            angle += 360
+        elif angle < 180:
+            angle -= 360
+        else:
+            pass
+        return angle
     
 
 class ImuFusion:

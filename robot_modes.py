@@ -5,9 +5,22 @@ import time
 class RobotModes(object):
     mode_config = {
         "avoid_behavior": "avoid_with_rainbows.py",
-        "circle_head": "circle_pand_tilt.py",
-        "test_rainbow": "test_rainbow.py"
+        "circle_head": "circle_pan_tilt_behavior.py",
+        "test_rainbow": "test_rainbow.py",
+        "test_leds": "leds_test.py",
+        "line_following": "line_follow_behavior.py",
+        "drive_north": "drive_north_behavior.py"
     }
+
+    menu_config = [
+        {"mode_name": "avoid_behavior", "text": "Avoid Behavior"},
+        {"mode_name": "circle_head", "text": "Circle Head"},
+        {"mode_name": "test_leds", "text": "Test LEDs"},
+        {"mode_name": "test_rainbow", "text": "LED Rainbow"},
+        {"mode_name": "line_following", "text": "Line Following"},
+        {"mode_name": "behavior_line", "text": "Drive In A Line"},
+        {"mode_name": "drive_north", "text": "Drive North"}
+    ]
 
     def __init__(self) -> None:
         # need to ensure that only one process is running at one time
@@ -20,13 +33,10 @@ class RobotModes(object):
         return self.current_process and self.current_process.returncode is None
     
     def run(self, mode_name):
-        if not self.is_running():
-            script = self.mode_config[mode_name]
-            self.current_process = subprocess.Popen(["python3", script])
-            return True
-        else:
-            # if there is a process already running
-            return False
+        while self.is_running():
+            self.stop()
+        script = self.mode_config[mode_name]
+        self.current_process = subprocess.Popen(["python3", script])
         
     def stop(self):
         # used to stop running process
