@@ -44,3 +44,8 @@ def get_control_instruction():
         return None
     else:
         return control_queue.get()
+    
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = "no-cache,no-store,must-revalidate"
+    return response

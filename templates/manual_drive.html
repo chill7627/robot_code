@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <!--keeps user from rescaling interface-->
+        <meta name="viewport" content="device-width,intial-scale=1.0,user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="/static/display.css?">
+        <script src="/static/lib/jquery-3.7.0.min.js"></script>
+        <script src="/static/touch-slider.js"></script>
+        <style>html,body {margin:0;height:100%;overflow:hidden}</style>
+        <title>Manually Drive The Robot</title>
+    </head>
+
+    <body>
+        <!--Drawing with scalable variable graphics-->
+        <svg id="left_slider" class="slider_track" viewBox="-10 -100 20 200">
+            <circle r="18" class="slider_tick"/>
+        </svg>
+
+        <a class="button" id="exitbutton" href="/exit">Exit</a>
+
+        <div id="video">
+            <img src="{{ url_for('display') }}"/>
+        </div>
+
+        <svg id="right_slider" class="slider_track" viewBox="-10 -100 20 200">
+            <circle r="18" class="slider_tick"/>
+        </svg>
+
+        <script type="text/javascript">
+            function set_motor(name,speed) {
+                $.post('/control', {'command': 'set_' + name, 'speed': speed});
+            }
+
+            // javascript will run any function passed to $() once page is completed loading
+            $('#exitbutton').click(function() {
+                $.post('/control', {'command': 'exit'});
+                window.location.replace('//' + window.location.hostname + ":5000")
+            });
+
+            makeSlider('left_slider', speed => set_motor('left', speed));
+            makeSlider('right_slider', speed => set_motor('right', speed));
+        </script>
+    </body>
+</html>
