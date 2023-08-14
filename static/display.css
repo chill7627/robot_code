@@ -4,23 +4,19 @@
     border: 1px solid blue;
     background-color: lightblue;
 }
-
 .slider_tick {
     fill: mistyrose;
 }
-
 #left_slider {
     position: absolute;
     left: 5vw;
     top: 5vh;
 }
-
 #right_slider {
     position: absolute;
     right: 5vw;
     top: 5vh;
 }
-
 .button {
     display: block;
     height: 10vh;
@@ -39,7 +35,7 @@
     margin-right: auto;
 }
 
-.video {
+#video {
     text-align: center;
 }
 
@@ -47,4 +43,23 @@
     margin-top: 20vh;
     width: 80vmin;
     height: auto;
+}
+
+.menu {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.menu li {
+    list-style-type: none;
+    list-style-position: initial;
+}
+
+.menu .button {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60vw;
+    border: 1px solid lightblue;
 }
