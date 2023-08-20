@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from robot_modes import RobotModes
 
 
@@ -18,12 +18,16 @@ def index():
 def run(mode_name):
     # function that runs when there is a post request to /run/<mode_name> path/url
     mode_manager.run(mode_name)
-    return f"{mode_name} running"
+    response = {"message": f'{mode_name} running'}
+    # check to see if the response should be redirected
+    if mode_manager.should_redirect(mode_name):
+        response['redirect'] = True
+    return jsonify(response)
 
 @app.route("/stop", methods=['POST'])
 def stop():
     mode_manager.stop()
-    return "stopped"
+    return jsonify({'message': 'Stopped'})
 
 @app.after_request
 def add_header(response):
@@ -33,5 +37,5 @@ def add_header(response):
     return response
 
 
-# start up the flask server
-app.run(host="0.0.0.0", debug=True)
+# start up the flask server, debug should only be used in testing and never in production
+app.run(host="0.0.0.0", debug=False)

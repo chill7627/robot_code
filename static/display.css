@@ -29,10 +29,24 @@
 }
 
 #exitbutton {
-    width: 40vh;
+    width: 40vw;
     margin-top: 5vh;
     margin-left: auto;
     margin-right: auto;
+}
+
+#startbutton {
+    width: 10vw;
+    margin-top: 5vh;
+    background-color: green;
+    border: 1px solid lightgreen;
+}
+
+#stopbutton {
+    width: 10vw;
+    margin-top: 5vh;
+    background-color: red;
+    border: 1px solid lightcoral;
 }
 
 #video {
